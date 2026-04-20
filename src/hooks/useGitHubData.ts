@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { githubService, GitHubRepo, GitHubUser } from '../services/github';
+import { githubService } from '../services/github';
+import type { GitHubRepo, GitHubUser } from '../services/github';
 import { CONFIG } from '../config';
 
 export const useGitHubData = () => {

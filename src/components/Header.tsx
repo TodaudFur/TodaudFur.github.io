@@ -1,4 +1,4 @@
-import { GitHubUser } from '../services/github';
+import type { GitHubUser } from '../services/github';
 import { CONFIG } from '../config';
 
 interface HeaderProps {

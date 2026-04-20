@@ -1,4 +1,4 @@
-import { GitHubRepo } from '../services/github';
+import type { GitHubRepo } from '../services/github';
 
 interface ProjectCardProps {
   repo: GitHubRepo;
