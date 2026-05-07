@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Redirecting...</title>
+    <style>
+        body { font-family: -apple-system, system-ui, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; background: #f5f5f7; color: #1d1d1f; }
+        .loader { border: 3px solid #d2d2d7; border-top: 3px solid #0071e3; border-radius: 50%; width: 24px; height: 24px; animation: spin 1s linear infinite; margin-right: 12px; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+    <div class="loader"></div>
+    <p>Connecting to Store...</p>
+
+    <script>
+        async function redirect() {
+            const params = new URLSearchParams(window.location.search);
+            const appName = params.get('app');
+            if (!appName) return location.href = '/';
+
+            try {
+                // 1. GitHub API로 해당 리포지토리의 README 가져오기
+                const res = await fetch(`https://api.github.com/repos/TodaudFur/${appName}/readme`);
+                if (!res.ok) throw new Error('Repository not found');
+                
+                const data = await res.json();
+                const content = decodeURIComponent(escape(atob(data.content))); // Unicode 대응 디코딩
+
+                // 2. 주석 내 JSON 파싱 (<!-- { ... } -->)
+                const match = content.match(/<!--\s*([\s\S]*?)\s*-->/);
+                if (!match) throw new Error('Config not found in README');
+                
+                const config = JSON.parse(match[1]);
+
+                // 3. OS 판별 및 리다이렉트
+                const userAgent = navigator.userAgent.toLowerCase();
+                const isiOS = userAgent.includes('iphone') || userAgent.includes('ipad') || userAgent.includes('ipod');
+                const isAndroid = userAgent.includes('android');
+
+                if (isiOS && config.ios_url) {
+                    location.href = config.ios_url;
+                } else if (isAndroid && config.android_url) {
+                    location.href = config.android_url;
+                } else {
+                    // 데스크탑이거나 해당 OS 링크가 없을 경우 GitHub 리포지토리로 이동
+                    location.href = `https://github.com/TodaudFur/${appName}`;
+                }
+            } catch (e) {
+                console.error(e);
+                // 에러 발생 시 메인 페이지로 이동
+                location.href = '/';
+            }
+        }
+        redirect();
+    </script>
+</body>
+</html>
