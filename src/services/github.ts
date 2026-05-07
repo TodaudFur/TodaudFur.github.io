@@ -25,10 +25,10 @@ export const githubService = {
     return response.json();
   },
 
-  async getRepos(username: string): Promise<GitHubRepo[]> {
+  async getRepos(username: string, excludeRepos: string[] = []): Promise<GitHubRepo[]> {
     const response = await fetch(`${BASE_URL}/users/${username}/repos?sort=updated&per_page=100`);
     if (!response.ok) throw new Error('Failed to fetch repos');
     const repos: GitHubRepo[] = await response.json();
-    return repos.filter(repo => !repo.fork); // Filter out forks by default
+    return repos.filter(repo => !repo.fork && !excludeRepos.includes(repo.name));
   }
 };

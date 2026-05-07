@@ -15,7 +15,7 @@ export const useGitHubData = () => {
         setLoading(true);
         const [userData, reposData] = await Promise.all([
           githubService.getUser(CONFIG.githubUsername),
-          githubService.getRepos(CONFIG.githubUsername)
+          githubService.getRepos(CONFIG.githubUsername, CONFIG.excludeRepos)
         ]);
         setUser(userData);
         setRepos(reposData);
