@@ -13,6 +13,7 @@ export const useGitHubData = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
+        setError(null);
         const [userData, reposData] = await Promise.all([
           githubService.getUser(CONFIG.githubUsername),
           githubService.getRepos(CONFIG.githubUsername, CONFIG.excludeRepos)

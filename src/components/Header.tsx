@@ -8,7 +8,7 @@ interface HeaderProps {
 export const Header = ({ user }: HeaderProps) => {
   return (
     <header>
-      <img src={user.avatar_url} alt={user.name} className="avatar" />
+      <img src={user.avatar_url} alt={user.name || ''} className="avatar" />
       <h1>{CONFIG.name}</h1>
       <p className="bio">{user.bio || CONFIG.bio}</p>
       <div className="social-links">
